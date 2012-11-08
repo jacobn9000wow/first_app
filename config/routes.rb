@@ -11,10 +11,14 @@ FirstApp::Application.routes.draw do
   get "static_pages/contact"
 
   resources :users
+  resources :sessions, only: [:new, :create, :destroy]
 
   root to: 'static_pages#home'
 
   match '/signup',  to: 'users#new'	#gives named route signup_path
+  match '/signin',  to: 'sessions#new'
+  match '/signout', to: 'sessions#destroy', via: :delete #Note the use of via: :delete for the signout route, which indicates that it should be invoked using an HTTP DELETE request.
+#Note that the routes for signin and signout are custom, but the route for creating a session is simply the default (i.e., [resource name]_path)
 
   match '/help',    to: 'static_pages#help'
   match '/about',   to: 'static_pages#about'
