@@ -2,6 +2,11 @@ require 'matrix'
 
 class StaticPagesController < ApplicationController
   def home #in plain ruby, these methods would do nothing
+
+    #@room = Room.new if signed_in?	#adding a room instance to the home action
+
+    gon.xfinal = 1
+    gon.yfinal = 1
     
     #OUTPUT:
     #12 x 12 boxes = 144 boxes

@@ -12,6 +12,13 @@ module SessionsHelper
     @current_user = user
   end
 
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to signin_url, notice: "Please sign in."
+    end
+  end
+
   def current_user
     @current_user ||= User.find_by_remember_token(cookies[:remember_token]) # uses the common but initially obscure ||= (“or equals”) assignment operator (Box 8.2). Its effect is to set the @current_user instance variable to the user corresponding to the remember token, but only if @current_user is undefined. In other words, the construction calls the find_by_remember_token method the first time current_user is called, but on subsequent invocations returns @current_user without hitting the database. This is an example of memoization. This is only useful if current_user is used more than once for a single user request; in any case, find_by_remember_token will be called at least once every time a user visits a page on the site.
   end

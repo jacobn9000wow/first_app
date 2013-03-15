@@ -11,7 +11,44 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121211062251) do
+ActiveRecord::Schema.define(:version => 20130314054737) do
+
+  create_table "comments", :force => true do |t|
+    t.string   "content"
+    t.string   "url"
+    t.integer  "user_id"
+    t.integer  "room_id"
+    t.integer  "post_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "inclusions", :force => true do |t|
+    t.integer  "included_user_id"
+    t.integer  "including_room_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "inclusions", ["included_user_id", "including_room_id"], :name => "index_inclusions_on_included_user_id_and_including_room_id", :unique => true
+  add_index "inclusions", ["included_user_id"], :name => "index_inclusions_on_included_user_id"
+  add_index "inclusions", ["including_room_id"], :name => "index_inclusions_on_including_room_id"
+
+  create_table "posts", :force => true do |t|
+    t.string   "title"
+    t.string   "content"
+    t.string   "url"
+    t.integer  "user_id"
+    t.integer  "room_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "rooms", :force => true do |t|
+    t.string   "room_name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "name"

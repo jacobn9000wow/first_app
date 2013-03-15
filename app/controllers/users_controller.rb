@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
-  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy] #The authorization application code uses a before filter, which arranges for a particular method to be called before the given actions. To require users to be signed in, we define a signed_in_user method and invoke it using before_filter :signed_in_user, 
-  before_filter :correct_user,   only: [:edit, :update]
-  before_filter :admin_user,     only: :destroy
+  before_filter :signed_in_user, only: [:edit, :update, :destroy] #The authorization application code uses a before filter, which arranges for a particular method to be called before the given actions. To require users to be signed in, we define a signed_in_user method and invoke it using before_filter :signed_in_user, 
+  before_filter :correct_user,   only: [:edit, :update, :destroy, :show]
+  before_filter :admin_user,     only: [:index, :destroy]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -48,6 +48,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def groups
+    @title = "Groups"
+    @user = User.find(params[:id])
+    @rooms = @user.including_rooms.paginate(page: params[:page])
+    render 'show_groups'
+  end
+
   private
 
     def signed_in_user
@@ -63,8 +70,12 @@ class UsersController < ApplicationController
 
     def correct_user
       @user = User.find(params[:id])
-      flash[:notice] = "Please sign in."
-      redirect_to(root_path) unless current_user?(@user)  #current_user? defined in sessions helper
+      unless current_user?(@user)  #current_user? defined in sessions helper
+        flash[:notice] = "Please sign in."
+        redirect_to(root_path) #unless current_user?(@user)  #current_user? defined in sessions helper
+      end
+
+			
     end
 
     def admin_user
